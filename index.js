@@ -1,10 +1,10 @@
-const mock         = require( “mock-require” )
-const gulp         = require( “gulp”         )
-const Vinyl        = require( “vinyl”        )
+const mock         = require( "mock-require" )
+const gulp         = require( "gulp"         )
+const Vinyl        = require( "vinyl"        )
 const {
     Readable,
     Writable
-} = require( “stream” )
+} = require( "stream" )
 
 class GulpMock {
     constructor(tasks) {
@@ -18,7 +18,7 @@ class GulpMock {
     }
 
     setTasks(tasks) {
-        if(typeof(tasks) == “string”) {
+        if(typeof(tasks) == "string") {
             tasks = require(tasks)
         }
         this.tasks = tasks
@@ -42,7 +42,7 @@ class GulpMock {
         this._src_path_test = testFunc
     }
 
-    srcEmit({ cmd = “/“, base = cmd, file, path = `${ base }/${ file }`, contents = “” }) {
+    srcEmit({ cmd = "/", base = cmd, file, path = `${ base }/${ file }`, contents = "" }) {
         this._src_path.push( new Vinyl({ cmd, base, path, contents: Buffer.from(contents) }) )
     }
 
