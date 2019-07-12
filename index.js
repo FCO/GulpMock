@@ -14,7 +14,7 @@ class GulpMock {
 
         if(tasks) this.setTasks(tasks)
         this.reset()
-        mock(“gulp”, this.gulp)
+        mock("gulp", this.gulp)
     }
 
     setTasks(tasks) {
