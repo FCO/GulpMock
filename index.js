@@ -59,15 +59,20 @@ class GulpMock {
     }
 
     run(taskName, ...data) {
-        return this.tasks[taskName](this.gulp, ...data)
+        let self = this
+        return new Promise(acc => this.tasks[taskName](this.gulp, ...data).on("finish", () => acc()))
     }
 
     src(paths, opts) {
         this._src_path_test(paths)
         this._src_opts_test(opts)
-        let stream = new Readable({ objectMode: true })
-        stream._read = () => {}
+        let stream = new Readable({
+            objectMode: true,
+            emitClose:  true,
+            read() {}
+        })
         this._src_path.forEach(item => stream.push( item ))
+        stream.push( null )
         return stream
     }
 
@@ -75,10 +80,15 @@ class GulpMock {
         this._dest_path_test(dir)
         this._dest_opts_test(opts)
 
-        let stream = new Writable({ objectMode: true })
-        stream._write = file => {
-            this._dest_test_emitted(file)
-        }
+        let self = this
+        let stream = new Writable({
+            objectMode: true,
+            emitClose:  true,
+            write(file, encoding, done) {
+                self._dest_test_emitted(file)
+                done()
+            }
+        })
         return stream
     }
 }

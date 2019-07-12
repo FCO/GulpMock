@@ -28,7 +28,7 @@ describe("inline", () => {
         mock.destPathTest(paths => paths.should.be.eql("345"))
         mock.destOptsTest(opts  => should(opts).be.null)
         mock.destEmittedTest(file => file.path.toString().should.be.eql("/bla/ble.bli"))
-        mock.run("task1")
+        return mock.run("task1")
     })
 
     it("with content", () => {
@@ -42,7 +42,7 @@ describe("inline", () => {
             file.path.should.be.eql("/bla/ble.bli")
             file.contents.toString().should.be.eql("file content")
         })
-        mock.run("task1")
+        return mock.run("task1")
     })
 
     it("with transformation", () => {
@@ -56,7 +56,7 @@ describe("inline", () => {
             file.path.should.be.eql("ilb.elb/alb")
             file.contents.toString().should.be.eql("tnetnoc elif")
         })
-        mock.run("task1")
+        return mock.run("task1")
     })
 })
 
@@ -69,7 +69,7 @@ describe("file", () => {
         mock.destPathTest(paths => paths.should.be.eql("345"))
         mock.destOptsTest(opts  => should(opts).be.null)
         mock.destEmittedTest(file => file.path.toString().should.be.eql("/bla/ble.bli"))
-        mock.run("task1")
+        return mock.run("task1")
     })
 
     it("with content", () => {
@@ -83,7 +83,7 @@ describe("file", () => {
             file.path.should.be.eql("/bla/ble.bli")
             file.contents.toString().should.be.eql("file content")
         })
-        mock.run("task1")
+        return mock.run("task1")
     })
 
     it("with transformation", () => {
@@ -97,6 +97,6 @@ describe("file", () => {
             file.path.should.be.eql("ilb.elb/alb")
             file.contents.toString().should.be.eql("tnetnoc elif")
         })
-        mock.run("task2")
+        return mock.run("task2")
     })
 })
