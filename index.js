@@ -12,9 +12,9 @@ class GulpMock {
         this.gulp.src  = this.src.bind(this)
         this.gulp.dest = this.dest.bind(this)
 
+        mock("gulp", this.gulp)
         if(tasks) this.setTasks(tasks)
         this.reset()
-        mock("gulp", this.gulp)
     }
 
     setTasks(tasks) {
