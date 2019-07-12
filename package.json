@@ -1,12 +1,12 @@
 {
-  "name": "gulp-mock",
+  "name": "gulp-src-dest-mock",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
-  "author": "",
+  "author": "Fernando Correa",
   "license": "ISC",
   "dependencies": {
     "gulp": "^4.0.2",

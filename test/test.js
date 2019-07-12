@@ -17,7 +17,7 @@ tac._transform = (file, encoding, callback) => {
     callback(error, output);
 }
 
-describe("Testing the mock", () => {
+describe("inline", () => {
     beforeEach(() => mock.reset())
 
     it("no content", () => {
@@ -57,5 +57,46 @@ describe("Testing the mock", () => {
             file.contents.toString().should.be.eql("tnetnoc elif")
         })
         mock.run("task1")
+    })
+})
+
+describe("file", () => {
+    it("no content", () => {
+        mock.setTasks("./test-gulpfile.js")
+        mock.srcEmit({ base: "/bla", file: "ble.bli" })
+        mock.srcPathTest(paths => paths.should.be.eql("123"))
+        mock.srcOptsTest(opts  => should(opts).be.null)
+        mock.destPathTest(paths => paths.should.be.eql("345"))
+        mock.destOptsTest(opts  => should(opts).be.null)
+        mock.destEmittedTest(file => file.path.toString().should.be.eql("/bla/ble.bli"))
+        mock.run("task1")
+    })
+
+    it("with content", () => {
+        mock.setTasks("./test-gulpfile.js")
+        mock.srcEmit({ base: "/bla", file: "ble.bli", contents: "file content" })
+        mock.srcPathTest(paths => paths.should.be.eql("123"))
+        mock.srcOptsTest(opts  => should(opts).be.null)
+        mock.destPathTest(paths => paths.should.be.eql("345"))
+        mock.destOptsTest(opts  => should(opts).be.null)
+        mock.destEmittedTest(file => {
+            file.path.should.be.eql("/bla/ble.bli")
+            file.contents.toString().should.be.eql("file content")
+        })
+        mock.run("task1")
+    })
+
+    it("with transformation", () => {
+        mock.setTasks("./test-gulpfile.js")
+        mock.srcEmit({ base: "/bla", file: "ble.bli", contents: "file content" })
+        mock.srcPathTest(paths => paths.should.be.eql("123"))
+        mock.srcOptsTest(opts  => should(opts).be.null)
+        mock.destPathTest(paths => paths.should.be.eql("345"))
+        mock.destOptsTest(opts  => should(opts).be.null)
+        mock.destEmittedTest(file => {
+            file.path.should.be.eql("ilb.elb/alb")
+            file.contents.toString().should.be.eql("tnetnoc elif")
+        })
+        mock.run("task2")
     })
 })
