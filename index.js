@@ -7,28 +7,28 @@ const {
 } = require( "stream" )
 
 class GulpMock {
-    constructor(tasks) {
+    constructor(tasks, reset) {
         this.gulp      = gulp
         this.gulp.src  = this.src.bind(this)
         this.gulp.dest = this.dest.bind(this)
 
         mock("gulp", this.gulp)
-        if(tasks) this.setTasks(tasks)
-        this.reset()
+        this.reset(reset)
+        if(tasks) this.setTasks(tasks, reset)
     }
 
-    setTasks(tasks) {
-        this.reset()
+    setTasks(tasks, reset) {
         if(typeof(tasks) == "string") {
             tasks = require(tasks)
         }
         this.tasks = tasks
-        this.reset()
     }
 
-    reset() {
-        this._src_path_test     = () => {}
-        this._src_opts_test     = () => {}
+    reset(onError) {
+        if(onError && this._src_path_test && this._src_path_test.length > 0) onError(`${ this._src_path_test.length } path test`)
+        if(onError && this._src_opts_test && this._src_opts_test.length > 0) onError(`${ this._src_opts_test.length } opts test`)
+        this._src_path_test     = []
+        this._src_opts_test     = []
         this._src_path          = []
         this._dest_path_test    = () => {}
         this._dest_opts_test    = () => {}
@@ -36,11 +36,11 @@ class GulpMock {
     }
 
     srcOptsTest(testFunc) {
-        this._src_opts_test = testFunc
+        this._src_opts_test.push(testFunc)
     }
 
     srcPathTest(testFunc) {
-        this._src_path_test = testFunc
+        this._src_path_test.push(testFunc)
     }
 
     srcEmit({ cmd = "/", base = cmd, file, path = `${ base }/${ file }`, contents = "" }) {
@@ -65,8 +65,10 @@ class GulpMock {
     }
 
     src(paths, opts) {
-        this._src_path_test(paths)
-        this._src_opts_test(opts)
+        let pathTester = this._src_path_test.shift()
+        if(pathTester) pathTester(paths)
+        let optsTester = this._src_opts_test.shift()
+        if(optsTester) optsTester(opts)
         let stream = new Readable({
             objectMode: true,
             emitClose:  true,
