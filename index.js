@@ -18,6 +18,7 @@ class GulpMock {
     }
 
     setTasks(tasks) {
+        this.reset()
         if(typeof(tasks) == "string") {
             tasks = require(tasks)
         }
